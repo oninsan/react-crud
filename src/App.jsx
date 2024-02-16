@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Table, Col, Form, Modal } from "reactstrap";
+import { Table, Col } from "reactstrap";
 import ViewDetail from "./Components/ViewDetail";
 import UpdateDept from "./Components/UpdateDept";
 import CreateDeptForm from "./Components/CreateDeptForm";
@@ -46,7 +46,6 @@ const App = () => {
       id: id,
       name: deptName,
     };
-    console.log(dataToPost);
     depts.map(async (dept) => {
       if (dept.id === id) {
         try {
@@ -86,6 +85,7 @@ const App = () => {
             toggled={modal}
             untoggle={toggle}
             currName={currentName}
+            currentId={currentId}
           />
         ) : (
           ""
@@ -96,7 +96,7 @@ const App = () => {
             untoggle={toggleUpdateModal}
             updateDeptName={updateDeptName}
             currentId={currentId}
-            currentName={currentName}
+            // currentName={currentName}
           />
         ) : (
           ""

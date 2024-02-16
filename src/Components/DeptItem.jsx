@@ -1,4 +1,5 @@
 import { Button } from "reactstrap";
+import { useEffect, useState } from "react";
 
 const DeptItem = ({
   id,
@@ -9,6 +10,27 @@ const DeptItem = ({
   setCurrentName,
   setCurrentId,
 }) => {
+  const [deptName, setDeptName] = useState("");
+  const getDeptName = async (id) => {
+    try {
+      const response = await fetch(
+        "http://localhost:5134/api/Department/" + id
+      );
+      const data = await response.json();
+      setDeptName(data.name);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+    isMounted ? getDeptName(id) : setDeptName(deptName);
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
+
   return (
     <tr>
       <th scope="row">{id}</th>
@@ -29,6 +51,7 @@ const DeptItem = ({
           onClick={() => {
             toggleViewModal();
             setCurrentName(name);
+            setCurrentId(id);
           }}
         >
           View
