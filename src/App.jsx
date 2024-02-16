@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Button, Table, Col, Form, Modal } from "reactstrap";
 import ViewDetail from "./Components/ViewDetail";
 import UpdateDept from "./Components/UpdateDept";
+import CreateDeptForm from "./Components/CreateDeptForm";
 const App = () => {
   const [depts, setDepts] = useState([]);
-  const [deptName, setDeptName] = useState("");
   const [modal, setModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
   const [currentName, setCurrentName] = useState("");
@@ -17,6 +17,23 @@ const App = () => {
       const response = await fetch("http://localhost:5134/api/Department");
       const data = await response.json();
       setDepts(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const submit = async (newName) => {
+    try {
+      const dataToPost = {
+        name: newName,
+      };
+
+      await fetch("http://localhost:5134/api/Department", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataToPost),
+      });
+      await getDepts();
     } catch (error) {
       console.log(error);
     }
@@ -54,26 +71,6 @@ const App = () => {
     }
   };
 
-  const submit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const dataToPost = {
-        name: deptName,
-      };
-
-      await fetch("http://localhost:5134/api/Department", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dataToPost),
-      });
-      setDeptName("");
-      await getDepts();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     getDepts();
   }, []);
@@ -103,22 +100,7 @@ const App = () => {
         )}
 
         {/* <Button>Hello</Button> */}
-        <h1>Department List</h1>
-        <Col>
-          <Form onSubmit={submit} className="d-flex mb-2">
-            <input
-              type="text"
-              placeholder="Dept name"
-              value={deptName}
-              onChange={(e) => {
-                setDeptName(e.target.value);
-              }}
-              className="form-control me-2"
-            />
-            <Button color="primary">Submit</Button>
-          </Form>
-        </Col>
-
+        <CreateDeptForm submit={submit} />
         <Col>
           <Table bordered>
             <thead>
