@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Modal, Button, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 
-const UpdateDept = ({ toggled, untoggle, updateDeptName, currentId }) => {
+const UpdateDept = ({ toggled, untoggle, currentId, getDepts }) => {
   const [deptName, setDeptName] = useState("");
 
   const getDeptName = async (currentId) => {
@@ -11,6 +11,23 @@ const UpdateDept = ({ toggled, untoggle, updateDeptName, currentId }) => {
       );
       const data = await response.json();
       setDeptName(data.name);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateDeptName = async (id, deptName) => {
+    const dataToPost = {
+      id: id,
+      name: deptName,
+    };
+    try {
+      await fetch("http://localhost:5134/api/Department/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataToPost),
+      });
+      getDepts();
     } catch (error) {
       console.log(error);
     }

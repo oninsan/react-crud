@@ -41,27 +41,6 @@ const App = () => {
     }
   };
 
-  const updateDeptName = (id, deptName) => {
-    const dataToPost = {
-      id: id,
-      name: deptName,
-    };
-    depts.map(async (dept) => {
-      if (dept.id === id) {
-        try {
-          await fetch("http://localhost:5134/api/Department/" + id, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dataToPost),
-          });
-          getDepts();
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    });
-  };
-
   const deleteDept = async (id) => {
     try {
       await fetch("http://localhost:5134/api/Department/" + id, {
@@ -74,7 +53,11 @@ const App = () => {
   };
 
   useEffect(() => {
-    getDepts();
+    let isMounted = true;
+    isMounted ? getDepts() : setDepts([]);
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
@@ -94,9 +77,8 @@ const App = () => {
           <UpdateDept
             toggled={updateModal}
             untoggle={toggleUpdateModal}
-            updateDeptName={updateDeptName}
             currentId={currentId}
-            // currentName={currentName}
+            getDepts={getDepts}
           />
         ) : (
           ""
@@ -122,7 +104,6 @@ const App = () => {
                   toggleUpdateModal={toggleUpdateModal}
                   deleteDept={deleteDept}
                   setCurrentName={setCurrentName}
-                  updateDeptName={updateDeptName}
                   setCurrentId={setCurrentId}
                 />
               ))}
