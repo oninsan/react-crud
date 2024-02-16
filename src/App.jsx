@@ -3,6 +3,8 @@ import { Button, Table, Col, Form, Modal } from "reactstrap";
 import ViewDetail from "./Components/ViewDetail";
 import UpdateDept from "./Components/UpdateDept";
 import CreateDeptForm from "./Components/CreateDeptForm";
+import DeptItem from "./Components/DeptItem";
+
 const App = () => {
   const [depts, setDepts] = useState([]);
   const [modal, setModal] = useState(false);
@@ -44,6 +46,7 @@ const App = () => {
       id: id,
       name: deptName,
     };
+    console.log(dataToPost);
     depts.map(async (dept) => {
       if (dept.id === id) {
         try {
@@ -112,43 +115,16 @@ const App = () => {
             </thead>
             <tbody>
               {depts.map((dept) => (
-                <tr key={dept.id}>
-                  <th scope="row">{dept.id}</th>
-                  <td>{dept.name}</td>
-                  <td>
-                    <Button
-                      size="sm"
-                      color="danger"
-                      className="mx-2"
-                      onClick={() => {
-                        deleteDept(dept.id);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      size="sm"
-                      onClick={() => {
-                        toggle();
-                        setCurrentName(dept.name);
-                      }}
-                    >
-                      View
-                    </Button>
-                    <Button
-                      color="success"
-                      size="sm"
-                      className="mx-2"
-                      onClick={() => {
-                        toggleUpdateModal();
-                        setCurrentName(dept.name);
-                        setCurrentId(dept.id);
-                      }}
-                    >
-                      Update
-                    </Button>
-                  </td>
-                </tr>
+                <DeptItem
+                  {...dept}
+                  key={dept.id}
+                  toggleViewModal={toggle}
+                  toggleUpdateModal={toggleUpdateModal}
+                  deleteDept={deleteDept}
+                  setCurrentName={setCurrentName}
+                  updateDeptName={updateDeptName}
+                  setCurrentId={setCurrentId}
+                />
               ))}
             </tbody>
           </Table>
